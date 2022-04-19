@@ -1,3 +1,5 @@
+// TODO: add delete element at the top left
+
 const defaultPolygonOptions: google.maps.PolygonOptions = {
   strokeColor: '#FF0000',
   strokeOpacity: 0.8,
