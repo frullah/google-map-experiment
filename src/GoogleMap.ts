@@ -8,12 +8,12 @@ const defaultPolygonOptions: google.maps.PolygonOptions = {
 };
 
 async function initializeMap() {
-  const { DeleteMenu } = await import('./DeleteMenu');
+  const { PolygonDeleteMenu } = await import('./PolygonDeleteMenu');
 
   const map = createMap();
-  const polygon = createAndAddTrianglePolygon({ map });
+  const polygon = addTrianglePolygon({ map });
 
-  const deleteMenu = new DeleteMenu();
+  const deleteMenu = new PolygonDeleteMenu();
 
   // Google Event reference: https://developers.google.com/maps/documentation/javascript/events
 
@@ -49,13 +49,11 @@ function createMap() {
   });
 }
 
-function createAndAddTrianglePolygon({ map }: { map: google.maps.Map }) {
+function addTrianglePolygon({ map }: { map: google.maps.Map }) {
   const paths = [
     { lat: 25.774, lng: -80.19 },
-    { lat: 26.774, lng: -80.19 },
     { lat: 18.466, lng: -66.118 },
     { lat: 32.321, lng: -64.757 },
-    { lat: 25.774, lng: -80.19 },
   ];
 
   const polygon = new google.maps.Polygon({

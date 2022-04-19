@@ -1,15 +1,11 @@
-/**
- * A menu that lets a user delete a selected vertex of a path.
- */
-export class DeleteMenu extends google.maps.OverlayView {
+export class PolygonDeleteMenu extends google.maps.OverlayView {
   private divElement: HTMLDivElement;
   private divListener?: google.maps.MapsEventListener;
 
   constructor() {
     super();
     this.divElement = document.createElement('div');
-    // this.divElement.className = 'bg-white text-white z-100 p-4';
-    this.divElement.classList.add('bg-white');
+    this.divElement.className = 'bg-white text-back p-4';
     this.divElement.innerHTML = 'Delete';
     this.divElement.addEventListener('click', () => {
       this.removeVertex();
@@ -28,11 +24,11 @@ export class DeleteMenu extends google.maps.OverlayView {
       map.getDiv(),
       'mousedown',
       (e: Event) => {
+        // what it does?
         if (e.target != deleteMenu.divElement) {
           deleteMenu.close();
         }
-      },
-      true
+      }
     );
   }
 
