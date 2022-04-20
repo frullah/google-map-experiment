@@ -1,31 +1,58 @@
 export class PolygonDeleteMenu extends google.maps.OverlayView {
-  private divElement: HTMLDivElement;
+  private divWrapper: HTMLDivElement;
+  private divDelete: HTMLDivElement;
+  private divCancel: HTMLDivElement;
   private divListener?: google.maps.MapsEventListener;
 
   constructor() {
     super();
-    this.divElement = document.createElement('div');
-    this.divElement.className = 'bg-white text-back p-4';
-    this.divElement.innerHTML = 'Delete';
-    this.divElement.addEventListener('click', () => {
+    this.divDelete = this.createDivDelete();
+    this.divCancel = this.createDivCancel();
+
+    this.divWrapper = document.createElement('div');
+    this.divWrapper.className = 'bg-white text-black max-w-100';
+    this.divWrapper.append(this.divDelete, this.divCancel);
+  }
+
+  private createDivDelete() {
+    const divDelete = document.createElement('div');
+    divDelete.className = 'p-2 hover:bg-blue-100';
+    divDelete.innerHTML = 'Delete';
+
+    divDelete.addEventListener('click', () => {
       this.removeVertex();
     });
+
+    return divDelete;
+  }
+
+  private createDivCancel() {
+    const divCancel = document.createElement('div');
+    divCancel.className = 'p-2 hover:bg-blue-100';
+    divCancel.innerHTML = 'Cancel';
+
+    divCancel.addEventListener('click', () => {
+      this.close();
+    });
+
+    return divCancel;
   }
 
   onAdd() {
     const deleteMenu = this;
     const map = this.getMap() as google.maps.Map;
 
-    this.getPanes()!.floatPane.appendChild(this.divElement);
+    this.getPanes()!.floatPane.appendChild(this.divWrapper);
 
     // mousedown anywhere on the map except on the menu div will close the
     // menu.
+    // DOESN'T work
     this.divListener = google.maps.event.addListener(
       map.getDiv(),
       'mousedown',
       (e: Event) => {
-        // what it does?
-        if (e.target != deleteMenu.divElement) {
+        alert(123);
+        if (e.target != deleteMenu.divWrapper) {
           deleteMenu.close();
         }
       }
@@ -37,7 +64,7 @@ export class PolygonDeleteMenu extends google.maps.OverlayView {
       google.maps.event.removeListener(this.divListener);
     }
 
-    (this.divElement.parentNode as HTMLElement).removeChild(this.divElement);
+    (this.divWrapper.parentNode as HTMLElement).removeChild(this.divWrapper);
 
     // clean up
     this.set('position', null);
@@ -51,21 +78,25 @@ export class PolygonDeleteMenu extends google.maps.OverlayView {
 
   draw() {
     const position = this.get('position');
-    const projection = this.getProjection();
+    const projection = this.getProjection(); // TODO: what is this?
 
     if (!position || !projection) {
       return;
     }
 
+    // alert(`${position.lat()} ${position.lng()}`)
+
+    // this.divElement.style.top = position.lat() + 'px';
+    // this.divElement.style.left = position.lng() + 'px';
+
     const point = projection.fromLatLngToDivPixel(position)!;
 
-    this.divElement.style.top = point.y + 'px';
-    this.divElement.style.left = point.x + 'px';
+    // TODO: how to render divWrapper near to the vertex
+    this.divCancel.textContent = `${point.x} ${point.y}`;
+    this.divWrapper.style.top = point.y + 'px';
+    this.divWrapper.style.left = point.x + 'px';
   }
 
-  /**
-   * Opens the menu at a vertex of a given path.
-   */
   open(
     map: google.maps.Map,
     path: google.maps.MVCArray<google.maps.LatLng>,
@@ -78,19 +109,14 @@ export class PolygonDeleteMenu extends google.maps.OverlayView {
     this.draw();
   }
 
-  /**
-   * Deletes the vertex from the path.
-   */
   removeVertex() {
     const path = this.get('path');
     const vertex = this.get('vertex');
 
-    if (!path || vertex == undefined) {
-      this.close();
-      return;
+    if (path && vertex !== undefined) {
+      path.removeAt(vertex);
     }
 
-    path.removeAt(vertex);
     this.close();
   }
 }

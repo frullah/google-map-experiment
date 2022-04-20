@@ -14,33 +14,20 @@ async function initializeMap() {
 
   const map = createMap();
   const polygon = addTrianglePolygon({ map });
+  const { deleteButton, toggleDraggableButton } = createControls(map);
 
   const deleteMenu = new PolygonDeleteMenu();
 
   // Google Event reference: https://developers.google.com/maps/documentation/javascript/events
 
-  google.maps.event.addListener(polygon, 'click', (e: any) => {
-    // Check if click was on a vertex control point
-    if (e.vertex == undefined) {
-      return;
-    }
-
-    // polygon.getPath()
-    // menu.removeVertex();
-    deleteMenu.open(map, polygon.getPath(), e.vertex);
-  });
-
-  // doesn't work
   google.maps.event.addListener(polygon, 'contextmenu', (e: any) => {
-    // Check if click was on a vertex control point
-    if (e.vertex == undefined) {
-      return;
-    }
+    if (e.vertex == undefined) return;
 
+    // polygon.getPath().setAt(e.vertex, {
+
+    // })
     deleteMenu.open(map, polygon.getPath(), e.vertex);
   });
-  // polyline is not a polygon
-  // TODO: remove one of its path
 }
 
 function createMap() {
@@ -49,6 +36,26 @@ function createMap() {
     center: { lat: 24.886, lng: -70.268 },
     mapTypeId: 'terrain',
   });
+}
+
+function createControls(map: google.maps.Map) {
+  const deleteButton = document.createElement('button');
+  deleteButton.className = 'p-2 bg-white';
+  deleteButton.textContent = 'Delete';
+
+  const toggleDraggableButton = document.createElement('button');
+  toggleDraggableButton.className = 'p-2 bg-white';
+  toggleDraggableButton.textContent = 'Toggle DOM Attachment';
+
+  map.controls[google.maps.ControlPosition.TOP_RIGHT].push(
+    toggleDraggableButton
+  );
+  map.controls[google.maps.ControlPosition.TOP_RIGHT].push(deleteButton);
+
+  return {
+    deleteButton,
+    toggleDraggableButton,
+  };
 }
 
 function addTrianglePolygon({ map }: { map: google.maps.Map }) {
