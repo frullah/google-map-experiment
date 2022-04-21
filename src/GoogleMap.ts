@@ -1,4 +1,5 @@
 import { Controls } from './Controls'
+import createButton from './createButton'
 
 const defaultPolygonOptions: google.maps.PolygonOptions = {
   strokeColor: '#FF0000',
@@ -8,6 +9,7 @@ const defaultPolygonOptions: google.maps.PolygonOptions = {
   fillOpacity: 0.35,
 }
 
+// Google Event reference: https://developers.google.com/maps/documentation/javascript/events
 async function initializeMap()
 {
   const controls = new Controls()
@@ -28,8 +30,6 @@ async function initializeMap()
   })
 
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(toggleEditButton)
-
-  // Google Event reference: https://developers.google.com/maps/documentation/javascript/events
 
   polygon.getPath().forEach((path: google.maps.LatLng, i) =>
   {
@@ -99,14 +99,6 @@ function createMap()
   })
 }
 
-
-function createButton({ text }: { text: string })
-{
-  const button = document.createElement('button')
-  button.className = 'p-2 bg-white'
-  button.textContent = text
-  return button
-}
 
 function triangleCoords()
 {
