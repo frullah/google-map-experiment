@@ -76,10 +76,10 @@ async function initializeMap()
 
   toggleEditButton.addEventListener("click", async () =>
   {
-    const enableEditable = !state.editable
-    const newMap = enableEditable ? map : null
+    const newEditState = !state.editable
+    const newMap = newEditState ? map : null
 
-    state.editable = enableEditable
+    state.editable = newEditState
     for (const marker of markers) {
       marker.setMap(newMap)
     }    
