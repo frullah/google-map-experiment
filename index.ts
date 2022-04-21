@@ -1,15 +1,11 @@
-import './style.css';
+import './src/style.css';
 
-import { initializeMap } from './src/GoogleMap';
-
-async function initMap() {
-  await initializeMap();
-}
+import { initializeMap } from './src/googleMap';
 
 declare global {
   interface Window {
     initMap: () => void;
   }
 }
-window.initMap = initMap;
+window.initMap = initializeMap;
 export {};

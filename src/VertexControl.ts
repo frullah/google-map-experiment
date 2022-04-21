@@ -1,6 +1,6 @@
 import createButton from "./createButton";
 
-export class Controls
+export class VertexControl
 {
   wrapper: HTMLDivElement;
   deleteButton: HTMLButtonElement;

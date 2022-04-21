@@ -1,4 +1,4 @@
-import { Controls as VertexControl } from './Controls'
+import { VertexControl } from './VertexControl'
 import createButton from './createButton'
 
 const defaultPolygonOptions: google.maps.PolygonOptions = {
