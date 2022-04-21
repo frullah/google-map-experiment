@@ -1,4 +1,4 @@
-import { Controls } from './Controls'
+import { Controls as VertexControl } from './Controls'
 import createButton from './createButton'
 
 const defaultPolygonOptions: google.maps.PolygonOptions = {
@@ -12,11 +12,12 @@ const defaultPolygonOptions: google.maps.PolygonOptions = {
 // Google Event reference: https://developers.google.com/maps/documentation/javascript/events
 async function initializeMap()
 {
-  const controls = new Controls()
-  const markers: google.maps.Marker[] = []
   const state = {
     editable: true
   }
+  const vertexControl = new VertexControl()
+  const toggleEditButton = createButton({ text: "Toggle Edit" })
+  const markers: google.maps.Marker[] = []
 
   const map = createMap()
   const polygon = new google.maps.Polygon({
@@ -24,9 +25,8 @@ async function initializeMap()
     paths: triangleCoords(),
     map
   })
-  const toggleEditButton = createButton({ text: "Toggle Edit" })
   const infowindow = new google.maps.InfoWindow({
-    content: controls.divWrapper
+    content: vertexControl.wrapper
   })
 
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(toggleEditButton)
@@ -60,12 +60,12 @@ async function initializeMap()
     markers.push(marker)
   })
 
-  controls.divCancel.addEventListener("click", () =>
+  vertexControl.cancelButton.addEventListener("click", () =>
   {
     infowindow.close()
   })
 
-  controls.divDelete.addEventListener("click", () =>
+  vertexControl.deleteButton.addEventListener("click", () =>
   {
     const marker = infowindow.get("marker") as google.maps.Marker
     const pathIndex = infowindow.get("index")
@@ -76,17 +76,13 @@ async function initializeMap()
 
   toggleEditButton.addEventListener("click", async () =>
   {
-    if (state.editable) {
-      for (const marker of markers) {
-        marker.setMap(null)
-      }
-      state.editable = false
-    } else {
-      for (const marker of markers) {
-        marker.setMap(map)
-      }
-      state.editable = true
-    }
+    const enableEditable = !state.editable
+    const newMap = enableEditable ? map : null
+
+    state.editable = enableEditable
+    for (const marker of markers) {
+      marker.setMap(newMap)
+    }    
   })
 }
 

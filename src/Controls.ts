@@ -1,34 +1,18 @@
+import createButton from "./createButton";
+
 export class Controls
 {
-  divWrapper: HTMLDivElement;
-  divDelete: HTMLDivElement;
-  divCancel: HTMLDivElement;
+  wrapper: HTMLDivElement;
+  deleteButton: HTMLButtonElement;
+  cancelButton: HTMLButtonElement;
 
   constructor()
   {
-    this.divDelete = this.createDivDelete();
-    this.divCancel = this.createDivCancel();
+    this.deleteButton = createButton({ text: "Delete" });
+    this.cancelButton = createButton({ text: "Cancel" });
 
-    this.divWrapper = document.createElement('div');
-    this.divWrapper.className = 'bg-white text-black max-w-100';
-    this.divWrapper.append(this.divDelete, this.divCancel);
-  }
-
-  private createDivDelete()
-  {
-    const divDelete = document.createElement('div');
-    divDelete.className = 'p-2 hover:bg-blue-100';
-    divDelete.innerHTML = 'Delete';
-
-    return divDelete;
-  }
-
-  private createDivCancel()
-  {
-    const divCancel = document.createElement('div');
-    divCancel.className = 'p-2 hover:bg-blue-100';
-    divCancel.innerHTML = 'Cancel';
-
-    return divCancel;
+    this.wrapper = document.createElement('div');
+    this.wrapper.className = 'max-w-100 bg-white text-black';
+    this.wrapper.append(this.deleteButton, this.cancelButton);
   }
 }
